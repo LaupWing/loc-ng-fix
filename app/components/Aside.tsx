@@ -38,28 +38,44 @@ export function Aside({
     const expanded = type === activeType
 
     return (
-        <Drawer
-            onOpenChange={(open) => {
-                if (!open) {
-                    close()
-                }
-            }}
-            open={expanded}
+        <div
+            aria-modal
+            className={`overlay ${expanded ? "expanded" : ""}`}
+            role="dialog"
         >
-            <DrawerContent className="max-w-2xl mx-auto grid">
-                <DrawerHeader className="flex items-center text-neutral-900 py-8 pt-4 px-6 border-b justify-between">
-                    <DrawerTitle className="text-2xl md:text-3xl font-bold">
-                        {heading}
-                    </DrawerTitle>
-                    <DrawerClose>
-                        <button className="w-10 h-10 border border-neutral-200 text-neutral-500 rounded-full flex items-center justify-center">
-                            <X size={18} />
-                        </button>
-                    </DrawerClose>
-                </DrawerHeader>
+            <button className="close-outside" onClick={close} />
+            <aside>
+                <header>
+                    <h3>{heading}</h3>
+                    <button className="close reset" onClick={close}>
+                        &times;
+                    </button>
+                </header>
                 <main>{children}</main>
-            </DrawerContent>
-        </Drawer>
+            </aside>
+        </div>
+        // <Drawer
+        //     onOpenChange={(open) => {
+        //         if (!open) {
+        //             close()
+        //         }
+        //     }}
+        //     open={expanded}
+        // >
+        //     <DrawerContent className="max-w-2xl mx-auto grid">
+        //         <DrawerHeader className="flex items-center text-neutral-900 py-8 pt-4 px-6 border-b justify-between">
+        //             <DrawerTitle className="text-2xl md:text-3xl font-bold">
+        //                 {heading}
+        //             </DrawerTitle>
+        //             <DrawerClose>
+        //                 <button className="w-10 h-10 border border-neutral-200 text-neutral-500 rounded-full flex items-center justify-center">
+        //                     <X size={18} />
+        //                 </button>
+        //             </DrawerClose>
+        //         </DrawerHeader>
+        //         <main>{children}</main>
+        //     </DrawerContent>
+        // </Drawer>
     )
 }
 
