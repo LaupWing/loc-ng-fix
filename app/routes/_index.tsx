@@ -228,16 +228,16 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
                 <div className=" w-full flex-shrink-0 rounded-2xl relative aspect-[8/12] md:aspect-[16/8] overflow-hidden flex">
                     <div className="h-[80%] pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-b from-transparent to-black z-10"></div>
                     <Carousel setApi={setApi} className="w-full h-full">
-                        <CarouselContent className="w-full h-full">
+                        <CarouselContent className="w-full h-full -ml-0">
                             {blogs.map((blog) => (
                                 <CarouselItem
                                     key={blog.id}
-                                    className="relative w-full h-full"
+                                    className="relative w-full h-full pl-0"
                                 >
                                     <Image
                                         key={blog.id}
                                         data={blog.image!}
-                                        className="object-cover object-center w-full h-full"
+                                        className="object-cover rounded-2xl object-center w-full h-full"
                                         sizes="(min-width: 45em) 20vw, 50vw"
                                     />
                                 </CarouselItem>
