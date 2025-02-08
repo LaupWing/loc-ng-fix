@@ -68,9 +68,11 @@ function loadDeferredData({ context }: LoaderFunctionArgs) {
 
 export default function Homepage() {
     const data = useLoaderData<typeof loader>()
+    const [isClient, setIsClient] = useState(false)
+    useEffect(() => setIsClient(true), [])
     return (
         <div className="home">
-            <FeaturedBlogs blogs={data.blogs} />
+            {isClient && <FeaturedBlogs blogs={data.blogs} />}
             <FeaturedCollection collection={data.featuredCollection} />
             <RecommendedProducts products={data.recommendedProducts} />
         </div>
@@ -184,22 +186,22 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
             <div className="custom-container">
                 <div className=" w-full flex-shrink-0 rounded-2xl relative aspect-[8/12] md:aspect-[16/8] overflow-hidden flex">
                     <div className="h-[80%] pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-b from-transparent to-black z-10"></div>
-                    {isClient && (
+                    {blogs.map((blog) => (
+                        <Image
+                            key={blog.id}
+                            data={blog.image!}
+                            className="object-cover object-center w-full h-full"
+                            sizes="(min-width: 45em) 20vw, 50vw"
+                        />
+                    ))}
+                    {/* {isClient && (
                         <Slider
                             ref={sliderRef}
                             {...settings}
                             className="w-full h-full flex items-center justify-center"
                         >
-                            {blogs.map((blog) => (
-                                <Image
-                                    key={blog.id}
-                                    data={blog.image!}
-                                    className="object-cover object-center w-full h-full"
-                                    sizes="(min-width: 45em) 20vw, 50vw"
-                                />
-                            ))}
                         </Slider>
-                    )}
+                    )} */}
                     <div className="absolute z-20 md:px-10 px-6 md:pb-16 pb-8 bottom-0 left-0 right-0">
                         <div className="flex flex-col">
                             <div className="flex md:flex-row flex-col justify-between pb-4 md:pb-8 border-b border-neutral-400 md:items-end">
