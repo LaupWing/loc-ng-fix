@@ -8,6 +8,7 @@ import {
     ArrowRight,
     Facebook,
     Menu,
+    ShoppingCart,
     Twitter,
     Youtube,
 } from "lucide-react"
@@ -268,7 +269,12 @@ function CartBadge({ count }: { count: number | null }) {
                 } as CartViewPayload)
             }}
         >
-            Cart {count === null ? <span>&nbsp;</span> : count}
+            {count !== null && (
+                <span className="absolute bg-neutral-50 border border-neutral-100 rounded-full w-5 h-5 flex justify-center items-center text-xs text-neutral-500 font-bold -right-4 -top-2">
+                    {count}
+                </span>
+            )}
+            <ShoppingCart />
         </a>
     )
 }
