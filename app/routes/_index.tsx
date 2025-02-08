@@ -3,7 +3,6 @@ import { Await, useLoaderData, Link, type MetaFunction } from "@remix-run/react"
 import { Suspense, useEffect, useRef, useState } from "react"
 import { Image, Money } from "@shopify/hydrogen"
 import { AnimatePresence, motion } from "motion/react"
-import Slider from "react-slick"
 import type {
     ArticleItemFragment,
     FeaturedCollectionFragment,
