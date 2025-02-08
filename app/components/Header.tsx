@@ -1,10 +1,20 @@
-import { Suspense } from "react"
+import { Suspense, useEffect, useState } from "react"
 import { Await, NavLink } from "@remix-run/react"
 import { type CartViewPayload, useAnalytics } from "@shopify/hydrogen"
 import type { HeaderQuery, CartApiQueryFragment } from "storefrontapi.generated"
 import { useAside } from "~/components/Aside"
-import { ArrowLeft, ArrowRight, Facebook, Twitter, Youtube } from "lucide-react"
+import {
+    ArrowLeft,
+    ArrowRight,
+    Facebook,
+    Menu,
+    Twitter,
+    Youtube,
+} from "lucide-react"
 import { Whatsapp } from "./logos/Whatsapp"
+import Logo from "./logos/Logo"
+import { cn } from "~/lib/utils"
+import { useScrollPosition } from "./utils"
 
 interface HeaderProps {
     header: HeaderQuery
@@ -22,6 +32,21 @@ export function Header({
     publicStoreDomain,
 }: HeaderProps) {
     const { shop, menu } = header
+
+    const scrollY = useScrollPosition()
+    const [scrolledPassed, setScrolledPassed] = useState(false)
+
+    useEffect(() => {
+        if (scrollY > 40) {
+            if (!scrolledPassed) {
+                setScrolledPassed(true)
+            }
+        } else if (scrollY < 10) {
+            if (scrolledPassed) {
+                setScrolledPassed(false)
+            }
+        }
+    }, [scrollY])
     return (
         <>
             <div className="flex items-center justify-center h-12 bg-black z-50">
@@ -40,7 +65,70 @@ export function Header({
                     </div>
                 </div>
             </div>
-            <header className="header">
+            <header
+                className={cn(
+                    "bg-white duration-300 sticky z-50 top-0",
+                    scrolledPassed
+                        ? "shadow-md rounded-none py-6"
+                        : "shadow-none rounded-t-3xl py-8"
+                )}
+            >
+                <div className="custom-container grid items-center grid-cols-4">
+                    <button
+                        className="md:hidden"
+                        onClick={() => open("mobile")}
+                    >
+                        <Menu />
+                    </button>
+                    <NavLink
+                        className="text-2xl col-span-2 md:col-span-1 flex items-center justify-center md:justify-start"
+                        end
+                        prefetch="intent"
+                        to="/"
+                    >
+                        <h1>
+                            <Logo className="w-24" />
+                        </h1>
+                    </NavLink>
+                    <nav className="col-span-2 hidden md:block">
+                        <ul className="flex max-w-lg mx-auto justify-between uppercase">
+                            {(menu || FALLBACK_HEADER_MENU).items.map(
+                                (item) => {
+                                    if (!item.url) return null
+
+                                    // if the url is internal, we strip the domain
+                                    const url =
+                                        item.url.includes("myshopify.com") ||
+                                        item.url.includes(publicStoreDomain) ||
+                                        item.url.includes(
+                                            header.shop.primaryDomain.url
+                                        )
+                                            ? new URL(item.url).pathname
+                                            : item.url
+                                    return (
+                                        <NavLink
+                                            className="header-menu-item"
+                                            end
+                                            key={item.id}
+                                            // onClick={close}
+                                            prefetch="intent"
+                                            style={activeLinkStyle}
+                                            to={url}
+                                        >
+                                            {item.title}
+                                        </NavLink>
+                                    )
+                                }
+                            )}
+                        </ul>
+                    </nav>
+                    <div className="flex gap-6 mr-1 md:mr-0 justify-end">
+                        {/* <User className="hidden md:block" /> */}
+                        <CartToggle cart={cart} />
+                    </div>
+                </div>
+            </header>
+            {/* <header className="header">
                 <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
                     <strong>{shop.name}</strong>
                 </NavLink>
@@ -51,7 +139,7 @@ export function Header({
                     publicStoreDomain={publicStoreDomain}
                 />
                 <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-            </header>
+            </header> */}
         </>
     )
 }
