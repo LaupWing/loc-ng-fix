@@ -16,6 +16,7 @@
         "@netlify/edge-functions": "^2.10.0",
         "@netlify/remix-edge-adapter": "^3.4.2",
         "@netlify/remix-runtime": "^2.3.1",
+        "@radix-ui/react-dialog": "^1.1.6",
         "@remix-run/react": "^2.12.0",
         "@shopify/hydrogen": "^2024.7.4",
         "class-variance-authority": "^0.7.1",
@@ -27,7 +28,8 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "tailwind-merge": "^3.0.1",
-        "tailwindcss-animate": "^1.0.7"
+        "tailwindcss-animate": "^1.0.7",
+        "vaul": "^1.1.2"
     },
     "devDependencies": {
         "@graphql-codegen/cli": "^5.0.2",
