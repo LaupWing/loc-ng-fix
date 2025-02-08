@@ -1,11 +1,16 @@
 import { defer, type LoaderFunctionArgs } from "@netlify/remix-runtime"
 import { Await, useLoaderData, Link, type MetaFunction } from "@remix-run/react"
-import { Suspense } from "react"
+import { Suspense, useEffect, useRef, useState } from "react"
 import { Image, Money } from "@shopify/hydrogen"
+import { AnimatePresence, motion } from "motion/react"
+import Slider from "react-slick"
 import type {
+    ArticleItemFragment,
     FeaturedCollectionFragment,
     RecommendedProductsQuery,
 } from "storefrontapi.generated"
+import { MoveLeft, MoveRight } from "lucide-react"
+import { cn } from "~/lib/utils"
 
 export const meta: MetaFunction = () => {
     return [{ title: "Hydrogen | Home" }]
@@ -134,6 +139,163 @@ function RecommendedProducts({
                 </Await>
             </Suspense>
             <br />
+        </div>
+    )
+}
+
+function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
+    if (!blogs) return null
+    const [isClient, setIsClient] = useState(false)
+    useEffect(() => setIsClient(true), [])
+
+    let sliderRef = useRef<Slider>(null)
+    const [currentSlide, setCurrentSlide] = useState(0)
+
+    const settings = {
+        dots: false,
+        arrows: false,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        centerPadding: "10px",
+        slidesToScroll: 1,
+        beforeChange: (_: number, nextSlide: number) => {
+            setCurrentSlide(nextSlide)
+        },
+    }
+    const publishedAt = new Date(
+        blogs[currentSlide].publishedAt
+    ).toLocaleDateString("en-GB")
+
+    const next = () => {
+        if (sliderRef.current) {
+            sliderRef.current.slickNext()
+        }
+    }
+    const previous = () => {
+        if (sliderRef.current) {
+            sliderRef.current.slickPrev()
+        }
+    }
+
+    return (
+        <div className="bg-white pb-4 flex">
+            <div className="custom-container">
+                <div className=" w-full flex-shrink-0 rounded-2xl relative aspect-[8/12] md:aspect-[16/8] overflow-hidden flex">
+                    <div className="h-[80%] pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-b from-transparent to-black z-10"></div>
+                    {isClient && (
+                        <Slider
+                            ref={sliderRef}
+                            {...settings}
+                            className="w-full h-full flex items-center justify-center"
+                        >
+                            {blogs.map((blog) => (
+                                <Image
+                                    key={blog.id}
+                                    data={blog.image!}
+                                    className="object-cover object-center w-full h-full"
+                                    sizes="(min-width: 45em) 20vw, 50vw"
+                                />
+                            ))}
+                        </Slider>
+                    )}
+                    <div className="absolute z-20 md:px-10 px-6 md:pb-16 pb-8 bottom-0 left-0 right-0">
+                        <div className="flex flex-col">
+                            <div className="flex md:flex-row flex-col justify-between pb-4 md:pb-8 border-b border-neutral-400 md:items-end">
+                                <div className="flex pointer-events-none gap-2 flex-col max-w-lg">
+                                    {isClient && (
+                                        <AnimatePresence mode="wait">
+                                            <motion.span
+                                                key={blogs[currentSlide].id}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -20 }}
+                                                transition={{
+                                                    duration: 0.3,
+                                                    ease: "easeOut",
+                                                }}
+                                                className="text-sm text-neutral-50 font-bold"
+                                            >
+                                                {publishedAt}
+                                            </motion.span>
+                                        </AnimatePresence>
+                                    )}
+                                    {isClient && (
+                                        <AnimatePresence mode="wait">
+                                            <motion.h2
+                                                key={blogs[currentSlide].id}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -20 }}
+                                                transition={{
+                                                    duration: 0.3,
+                                                    delay: 0.1,
+                                                    ease: "easeOut",
+                                                }}
+                                                className="text-neutral-50 text-4xl md:text-6xl font-bold font-display"
+                                            >
+                                                {blogs[currentSlide].title}
+                                            </motion.h2>
+                                        </AnimatePresence>
+                                    )}
+                                    {isClient && (
+                                        <AnimatePresence mode="wait">
+                                            <motion.div
+                                                key={blogs[currentSlide].id}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -20 }}
+                                                transition={{
+                                                    duration: 0.3,
+                                                    delay: 0.2,
+                                                    ease: "easeOut",
+                                                }}
+                                                className="text-neutral-100 text-sm md:text-base line-clamp-2"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: blogs[currentSlide]
+                                                        .contentHtml,
+                                                }}
+                                            ></motion.div>
+                                        </AnimatePresence>
+                                    )}
+                                </div>
+                                <button className="w-48 text-center mt-4 md:mt-0 bg-yellow-300 font-bold text-sm uppercase py-3 rounded-full">
+                                    Read More
+                                </button>
+                            </div>
+                            <div className="text-white flex justify-between items-center pt-4">
+                                <button
+                                    className="cursor-pointer hover:text-yellow-400"
+                                    onClick={previous}
+                                >
+                                    <MoveLeft />
+                                </button>
+                                <div className="flex gap-5 items-center">
+                                    {blogs.map((_, index) => (
+                                        <button
+                                            key={index}
+                                            className={cn(
+                                                "border p-1 rounded-full",
+                                                index === currentSlide
+                                                    ? "border-white"
+                                                    : "border-transparent"
+                                            )}
+                                        >
+                                            <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                        </button>
+                                    ))}
+                                </div>
+                                <button
+                                    className="cursor-pointer hover:text-yellow-400"
+                                    onClick={next}
+                                >
+                                    <MoveRight />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
