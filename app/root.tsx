@@ -144,7 +144,7 @@ export function Layout({ children }: { children?: React.ReactNode }) {
                 <Meta />
                 <Links />
             </head>
-            <body className="bg-red-400">
+            <body className="bg-neutral-950">
                 {data ? (
                     <Analytics.Provider
                         cart={data.cart}
