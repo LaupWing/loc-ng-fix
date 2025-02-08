@@ -70,6 +70,7 @@ export default function Homepage() {
     const data = useLoaderData<typeof loader>()
     return (
         <div className="home">
+            <FeaturedBlogs blogs={data.blogs} />
             <FeaturedCollection collection={data.featuredCollection} />
             <RecommendedProducts products={data.recommendedProducts} />
         </div>
