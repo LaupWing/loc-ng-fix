@@ -258,6 +258,7 @@ function CartBadge({ count }: { count: number | null }) {
     return (
         <a
             href="/cart"
+            className="relative"
             onClick={(e) => {
                 e.preventDefault()
                 open("cart")
