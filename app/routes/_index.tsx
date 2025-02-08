@@ -13,6 +13,7 @@ import { MoveLeft, MoveRight } from "lucide-react"
 import { cn } from "~/lib/utils"
 import {
     Carousel,
+    CarouselApi,
     CarouselContent,
     CarouselItem,
 } from "~/components/ui/carousel"
@@ -156,42 +157,40 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
     const [isClient, setIsClient] = useState(false)
     useEffect(() => setIsClient(true), [])
 
-    let sliderRef = useRef<Slider>(null)
+    const [api, setApi] = useState<CarouselApi>()
     const [currentSlide, setCurrentSlide] = useState(0)
 
-    const settings = {
-        dots: false,
-        arrows: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        centerPadding: "10px",
-        slidesToScroll: 1,
-        beforeChange: (_: number, nextSlide: number) => {
-            setCurrentSlide(nextSlide)
-        },
-    }
     const publishedAt = new Date(
         blogs[currentSlide].publishedAt
     ).toLocaleDateString("en-GB")
 
     const next = () => {
-        if (sliderRef.current) {
-            sliderRef.current.slickNext()
+        if (api) {
+            api?.scrollNext()
         }
     }
     const previous = () => {
-        if (sliderRef.current) {
-            sliderRef.current.slickPrev()
+        if (api) {
+            api.scrollPrev()
         }
     }
+    useEffect(() => {
+        if (!api) {
+            return
+        }
+        setCurrentSlide(api.selectedScrollSnap())
+
+        api.on("select", () => {
+            setCurrentSlide(api.selectedScrollSnap())
+        })
+    }, [api])
 
     return (
         <div className="bg-white pb-4 flex">
             <div className="custom-container">
                 <div className=" w-full flex-shrink-0 rounded-2xl relative aspect-[8/12] md:aspect-[16/8] overflow-hidden flex">
                     <div className="h-[80%] pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-b from-transparent to-black z-10"></div>
-                    <Carousel className="w-full h-full">
+                    <Carousel setApi={setApi} className="w-full h-full">
                         <CarouselContent className="w-full h-full">
                             {blogs.map((blog) => (
                                 <CarouselItem
