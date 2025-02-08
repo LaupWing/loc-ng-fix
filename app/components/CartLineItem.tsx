@@ -6,6 +6,7 @@ import { Link } from "@remix-run/react"
 import { ProductPrice } from "./ProductPrice"
 import { useAside } from "./Aside"
 import type { CartApiQueryFragment } from "storefrontapi.generated"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 type CartLine = OptimisticCartLine<CartApiQueryFragment>
 
@@ -55,7 +56,7 @@ export function CartLineItem({
                     <ProductPrice price={line?.cost?.totalAmount} />
                 </small>
             </div>
-
+            <CartLineQuantity line={line} />
             {/* <div>
                 <Link
                     prefetch="intent"
@@ -80,7 +81,7 @@ export function CartLineItem({
                         </li>
                     ))}
                 </ul>
-                <CartLineQuantity line={line} />
+                
             </div> */}
         </li>
     )
@@ -98,34 +99,36 @@ function CartLineQuantity({ line }: { line: CartLine }) {
     const nextQuantity = Number((quantity + 1).toFixed(0))
 
     return (
-        <div className="cart-line-quantity">
-            <small>Quantity: {quantity} &nbsp;&nbsp;</small>
-            <CartLineUpdateButton
-                lines={[{ id: lineId, quantity: prevQuantity }]}
-            >
-                <button
-                    aria-label="Decrease quantity"
-                    disabled={quantity <= 1 || !!isOptimistic}
-                    name="decrease-quantity"
-                    value={prevQuantity}
+        <div className="flex flex-col items-center gap-2 ml-auto">
+            <div className="flex items-center rounded-full bg-neutral-50 border-neutral-200 border">
+                <CartLineUpdateButton
+                    lines={[{ id: lineId, quantity: prevQuantity }]}
                 >
-                    <span>&#8722; </span>
-                </button>
-            </CartLineUpdateButton>
-            &nbsp;
-            <CartLineUpdateButton
-                lines={[{ id: lineId, quantity: nextQuantity }]}
-            >
-                <button
-                    aria-label="Increase quantity"
-                    name="increase-quantity"
-                    value={nextQuantity}
-                    disabled={!!isOptimistic}
+                    <button
+                        aria-label="Decrease quantity"
+                        disabled={quantity <= 1 || !!isOptimistic}
+                        name="decrease-quantity"
+                        className="p-1 md:p-2 text-neutral-400/80"
+                        value={prevQuantity}
+                    >
+                        <ChevronLeft />
+                    </button>
+                </CartLineUpdateButton>
+                {quantity}
+                <CartLineUpdateButton
+                    lines={[{ id: lineId, quantity: nextQuantity }]}
                 >
-                    <span>&#43;</span>
-                </button>
-            </CartLineUpdateButton>
-            &nbsp;
+                    <button
+                        aria-label="Increase quantity"
+                        name="increase-quantity"
+                        className="p-1 md:p-2 text-neutral-400/80"
+                        value={nextQuantity}
+                        disabled={!!isOptimistic}
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                </CartLineUpdateButton>
+            </div>
             <CartLineRemoveButton
                 lineIds={[lineId]}
                 disabled={!!isOptimistic}
@@ -152,7 +155,11 @@ function CartLineRemoveButton({
             action={CartForm.ACTIONS.LinesRemove}
             inputs={{ lineIds }}
         >
-            <button disabled={disabled} type="submit">
+            <button
+                className="md:text-xs text-[10px] text-neutral-500 uppercase underline tracking-wider"
+                disabled={disabled}
+                type="submit"
+            >
                 Remove
             </button>
         </CartForm>
