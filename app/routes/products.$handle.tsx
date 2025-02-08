@@ -25,6 +25,7 @@ import {
     Carousel,
     CarouselApi,
     CarouselContent,
+    CarouselItem,
 } from "~/components/ui/carousel"
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -168,10 +169,10 @@ export default function Product() {
                                             : "border-transparent hover:border-neutral-300"
                                     )}
                                     onClick={() => {
-                                        // if (sliderRef.current) {
-                                        //     sliderRef.current.slideTo(index)
-                                        // }
-                                        // setCurrentSlide(index)
+                                        if (api) {
+                                            api.scrollTo(index)
+                                        }
+                                        setCurrentSlide(index)
                                     }}
                                 >
                                     <Image
@@ -185,8 +186,23 @@ export default function Product() {
                         )}
                     </div>
                     <div className="overflow-hidden relative w-full h-full flex">
-                        <Carousel setApi={setApi} className="w-full h-full">
-                            <CarouselContent className="w-full h-full -ml-0"></CarouselContent>
+                        <Carousel setApi={setApi} className="">
+                            <CarouselContent className="-ml-0">
+                                {product!.images.nodes.map((image: any) => (
+                                    <CarouselItem
+                                        key={image.id}
+                                        className="w-full h-full"
+                                    >
+                                        <Image
+                                            className="rounded-2xl flex-1"
+                                            data={image}
+                                            aspectRatio="1/1"
+                                            sizes="(min-width: 45em) 20vw, 50vw"
+                                        />
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            {/* <CarouselContent className="w-full h-full -ml-0"></CarouselContent> */}
                         </Carousel>
                         {/* <Swiper
                             spaceBetween={50}
