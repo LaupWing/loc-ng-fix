@@ -41,7 +41,7 @@ export function CartMain({ layout, cart: originalCart }: CartMainProps) {
                         />
                     ))}
                 </ul>
-                {/* {cartHasItems && <CartSummary cart={cart} layout={layout} />} */}
+                {cartHasItems && <CartSummary cart={cart} layout={layout} />}
             </div>
         </div>
     )
