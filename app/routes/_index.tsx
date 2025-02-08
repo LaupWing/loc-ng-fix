@@ -7,9 +7,10 @@ import Slider from "react-slick"
 import type {
     ArticleItemFragment,
     FeaturedCollectionFragment,
+    ProductDetailsFragment,
     RecommendedProductsQuery,
 } from "storefrontapi.generated"
-import { MoveLeft, MoveRight } from "lucide-react"
+import { MoveLeft, MoveRight, Star } from "lucide-react"
 import { cn } from "~/lib/utils"
 import {
     Carousel,
@@ -37,19 +38,21 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({ context }: LoaderFunctionArgs) {
-    const [{ blog }, { collections }] = await Promise.all([
+    const [{ blog }, { collections }, { product }] = await Promise.all([
         context.storefront.query(BLOGS_QUERY, {
             variables: {
                 startCursor: null,
             },
         }),
         context.storefront.query(FEATURED_COLLECTION_QUERY),
+        context.storefront.query(SPECIFIC_PRODUCT_QUERY),
         // Add other queries here, so that they are loaded in parallel
     ])
 
     return {
         featuredCollection: collections.nodes[0],
         blogs: blog!.articles.nodes,
+        specificProduct: product,
     }
 }
 
@@ -80,7 +83,10 @@ export default function Homepage() {
         <div className="home">
             {isClient && <FeaturedBlogs blogs={data.blogs} />}
             <HeroText />
-            <FeaturedCollection collection={data.featuredCollection} />
+            {/* <FeaturedCollection collection={data.featuredCollection} /> */}
+            <FeaturedProduct
+                product={data.specificProduct as ProductDetailsFragment}
+            />
             <RecommendedProducts products={data.recommendedProducts} />
         </div>
     )
@@ -337,6 +343,144 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
     )
 }
 
+function FeaturedProduct({ product }: { product: ProductDetailsFragment }) {
+    const [currentSlide, setCurrentSlide] = useState(0)
+    const [api, setApi] = useState<CarouselApi>()
+
+    const [isClient, setIsClient] = useState(false)
+    useEffect(() => setIsClient(true), [])
+
+    return (
+        <div className="bg-white">
+            <div className="custom-container grid items-start grid-cols-1 md:grid-cols-7 gap-14 py-8">
+                <div className="md:col-span-4 col-span-1 gap-2 items-start flex flex-col-reverse md:flex-row">
+                    <div className="md:grid flex flex-shrink-0 gap-2">
+                        {product!.images.nodes.map((image, index) => (
+                            <div
+                                key={image.id}
+                                className={cn(
+                                    "border-2 md:w-20 w-16 rounded-lg cursor-pointer",
+                                    index === currentSlide
+                                        ? "border-black"
+                                        : "border-transparent hover:border-neutral-300"
+                                )}
+                                onClick={() => {
+                                    if (api) {
+                                        api.scrollTo(index)
+                                    }
+                                    setCurrentSlide(index)
+                                }}
+                            >
+                                <Image
+                                    className="rounded-lg"
+                                    data={image}
+                                    aspectRatio="1/1"
+                                    sizes="(min-width: 45em) 20vw, 50vw"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                    <div className="overflow-hidden w-full h-full flex">
+                        {isClient && (
+                            <Carousel setApi={setApi} className="w-full h-full">
+                                <CarouselContent className="w-full h-full">
+                                    {product!.images.nodes.map((image) => (
+                                        <CarouselItem
+                                            key={image.id}
+                                            className="relative w-full h-full"
+                                        >
+                                            <Image
+                                                className="rounded-2xl flex-1"
+                                                data={image}
+                                                aspectRatio="1/1"
+                                                sizes="(min-width: 45em) 20vw, 50vw"
+                                            />
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                            </Carousel>
+                            // <Slider
+                            //     ref={sliderRef}
+                            //     {...settings}
+                            //     className="w-full h-full flex items-center justify-center"
+                            // >
+                            //     {product!.images.nodes.map((image) => (
+                            //         <div
+                            //             key={image.id}
+                            //             className="w-full h-full"
+                            //         >
+                            //             <Image
+                            //                 className="rounded-2xl flex-1"
+                            //                 data={image}
+                            //                 aspectRatio="1/1"
+                            //                 sizes="(min-width: 45em) 20vw, 50vw"
+                            //             />
+                            //         </div>
+                            //     ))}
+                            // </Slider>
+                        )}
+                    </div>
+                </div>
+                <div className="w-full md:col-span-3 grid gap-4">
+                    <div className="flex gap-2 items-center">
+                        <div className="flex">
+                            <Star
+                                className="fill-current text-yellow-400"
+                                size={18}
+                            />
+                            <Star
+                                className="fill-current text-yellow-400"
+                                size={18}
+                            />
+                            <Star
+                                className="fill-current text-yellow-400"
+                                size={18}
+                            />
+                            <Star
+                                className="fill-current text-yellow-400"
+                                size={18}
+                            />
+                            <Star
+                                className="fill-current text-yellow-400"
+                                size={18}
+                            />
+                        </div>
+                        <p className="text-sm">
+                            <b>4.8</b> | 176 Reviews
+                        </p>
+                    </div>
+                    <h4 className="uppercase font-display font-bold text-3xl">
+                        {product!.title}
+                    </h4>
+                    <div className="text-xl">
+                        <Money data={product!.priceRange.minVariantPrice} />
+                    </div>
+                    <div
+                        className="text-neutral-700 md:text-base text-sm"
+                        dangerouslySetInnerHTML={{
+                            __html: product!.descriptionHtml,
+                        }}
+                    ></div>
+                    <div className="flex my-2 md:my-4 rounded-full bg-emerald-100 mr-auto py-2.5 px-3">
+                        <div className="w-3.5 h-3.5 border-2 border-emerald-200 bg-emerald-400 rounded-full animate-pulse" />
+                        <p className="text-xs text-emerald-600 font-semibold ml-2">
+                            Your world changes if you change.
+                        </p>
+                    </div>
+                    <Link
+                        to={`/products/${product!.handle}`}
+                        className="text-center w-full flex"
+                    >
+                        <button className="text-center bg-yellow-300 font-bold text-sm uppercase py-3 w-full rounded-full">
+                            View Product
+                        </button>
+                    </Link>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 const FEATURED_COLLECTION_QUERY = `#graphql
     fragment FeaturedCollection on Collection {
         id
@@ -433,6 +577,47 @@ const BLOGS_QUERY = `#graphql
                     startCursor
                 }
             }
+        }
+    }
+` as const
+
+const SPECIFIC_PRODUCT_QUERY = `#graphql
+    fragment ProductDetails on Product {
+        id
+        title
+        handle
+        descriptionHtml
+        priceRange {
+            minVariantPrice {
+                amount
+                currencyCode
+            }
+        }
+        images(first: 3) {
+            nodes {
+                url(transform: { maxWidth: 2000, maxHeight: 2000, crop: CENTER })
+                id
+                altText
+                width
+                height
+            }
+        }
+        variants(first: 1) {  # 👈 Fetch the only variant of this product
+            nodes {
+                id
+                availableForSale
+                price {
+                    amount
+                    currencyCode
+                }
+            }
+        }
+    }
+
+    query SpecificProduct($country: CountryCode, $language: LanguageCode)
+        @inContext(country: $country, language: $language) {
+        product(handle: "body-crafting-system") {
+            ...ProductDetails
         }
     }
 ` as const
