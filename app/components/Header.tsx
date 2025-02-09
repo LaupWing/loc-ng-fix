@@ -34,6 +34,7 @@ export function Header({
     publicStoreDomain,
 }: HeaderProps) {
     const { shop, menu } = header
+    const { open } = useAside()
 
     const scrollY = useScrollPosition()
     const [scrolledPassed, setScrolledPassed] = useState(false)
