@@ -7,6 +7,9 @@ import {
     DrawerTitle,
 } from "./ui/drawer"
 import { X } from "lucide-react"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet"
+import Logo from "./logos/Logo"
+import { SocialIcons } from "./SocialIcons"
 
 type AsideType = "search" | "cart" | "mobile" | "closed"
 type AsideContextValue = {
@@ -37,23 +40,30 @@ export function Aside({
     const { type: activeType, close } = useAside()
     const expanded = type === activeType
 
-    return (
-        // <div
-        //     aria-modal
-        //     className={`overlay ${expanded ? "expanded" : ""}`}
-        //     role="dialog"
-        // >
-        //     <button className="close-outside" onClick={close} />
-        //     <aside>
-        //         <header>
-        //             <h3>{heading}</h3>
-        //             <button className="close reset" onClick={close}>
-        //                 &times;
-        //             </button>
-        //         </header>
-        //         <main>{children}</main>
-        //     </aside>
-        // </div>
+    return type === "mobile" ? (
+        <Sheet
+            onOpenChange={(open) => {
+                if (!open) {
+                    close()
+                }
+            }}
+            open={expanded}
+        >
+            <SheetContent
+                onOpenAutoFocus={(e) => e.preventDefault()}
+                side={"left"}
+                className="flex flex-col h-full p-0 gap-2"
+            >
+                <SheetHeader>
+                    <SheetTitle className="p-4">
+                        <Logo className="w-24" />
+                    </SheetTitle>
+                </SheetHeader>
+                <main className="p-4">{children}</main>
+                <SocialIcons className="text-neutral-800 p-4 py-6 bg-neutral-100 mt-auto" />
+            </SheetContent>
+        </Sheet>
+    ) : (
         <Drawer
             onOpenChange={(open) => {
                 if (!open) {
