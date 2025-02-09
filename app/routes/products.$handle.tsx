@@ -263,7 +263,7 @@ export default function Product() {
                         {product!.title}
                     </h4>
                     <div className="text-xl">
-                        {/* <Money data={product!.price.amount} /> */}
+                        <Money data={selectedVariant.price} />
                     </div>
                     <div
                         className="text-neutral-700 text-sm md:text-base"
