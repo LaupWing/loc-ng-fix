@@ -391,12 +391,18 @@ function FeaturedProduct({ product }: { product: ProductDetailsFragment }) {
                                             key={image.id}
                                             className="relative w-full h-full"
                                         >
-                                            <Image
-                                                className="rounded-2xl flex-1"
-                                                data={image}
-                                                aspectRatio="1/1"
-                                                sizes="(min-width: 45em) 20vw, 50vw"
-                                            />
+                                            <Link
+                                                to={`/products/${
+                                                    product!.handle
+                                                }`}
+                                            >
+                                                <Image
+                                                    className="rounded-2xl flex-1"
+                                                    data={image}
+                                                    aspectRatio="1/1"
+                                                    sizes="(min-width: 45em) 20vw, 50vw"
+                                                />
+                                            </Link>
                                         </CarouselItem>
                                     ))}
                                 </CarouselContent>
