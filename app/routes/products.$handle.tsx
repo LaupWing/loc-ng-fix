@@ -191,7 +191,7 @@ export default function Product() {
                                 {product!.images.nodes.map((image: any) => (
                                     <CarouselItem
                                         key={image.id}
-                                        className="w-full h-full"
+                                        className="w-full h-full pl-0"
                                     >
                                         <Image
                                             className="rounded-2xl flex-1"
