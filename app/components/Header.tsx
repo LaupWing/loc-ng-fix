@@ -16,6 +16,7 @@ import { Whatsapp } from "./logos/Whatsapp"
 import Logo from "./logos/Logo"
 import { cn } from "~/lib/utils"
 import { useScrollPosition } from "./utils"
+import { AnimatePresence, motion } from "framer-motion"
 
 interface HeaderProps {
     header: HeaderQuery
@@ -166,23 +167,64 @@ export function HeaderMenu({
     viewport: Viewport
     publicStoreDomain: HeaderProps["publicStoreDomain"]
 }) {
-    const className = `header-menu-${viewport}`
-    const { close } = useAside()
+    const { close, type } = useAside()
+    const staggerVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: (i: number) => ({
+            opacity: 1,
+            y: 0,
+            transition: { delay: i * 0.2, duration: 0.5, ease: "easeOut" },
+        }),
+        exit: { opacity: 0, y: 20, transition: { duration: 0.2 } }, // Animation for closing
+    }
 
     return (
-        <nav className={className} role="navigation">
-            {viewport === "mobile" && (
-                <NavLink
-                    end
-                    onClick={close}
-                    prefetch="intent"
-                    style={activeLinkStyle}
-                    to="/"
-                >
-                    Home
-                </NavLink>
-            )}
-            {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
+        <nav className="flex flex-col" role="navigation">
+            <AnimatePresence>
+                {type === "mobile" && (
+                    <motion.ul
+                        className="flex flex-col gap-6"
+                        role="navigation"
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit" // Exit animation when unmounting
+                    >
+                        {(menu || FALLBACK_HEADER_MENU).items.map(
+                            (item, index) => {
+                                if (!item.url) return null
+
+                                // If the URL is internal, strip the domain
+                                const url =
+                                    item.url.includes("myshopify.com") ||
+                                    item.url.includes(publicStoreDomain) ||
+                                    item.url.includes(primaryDomainUrl)
+                                        ? new URL(item.url).pathname
+                                        : item.url
+
+                                return (
+                                    <motion.li
+                                        key={item.id}
+                                        custom={index}
+                                        variants={staggerVariants}
+                                    >
+                                        <NavLink
+                                            className="uppercase text-xl"
+                                            end
+                                            onClick={close}
+                                            prefetch="intent"
+                                            style={activeLinkStyle}
+                                            to={url}
+                                        >
+                                            {item.title}
+                                        </NavLink>
+                                    </motion.li>
+                                )
+                            }
+                        )}
+                    </motion.ul>
+                )}
+            </AnimatePresence>
+            {/* {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
                 if (!item.url) return null
 
                 // if the url is internal, we strip the domain
@@ -194,7 +236,7 @@ export function HeaderMenu({
                         : item.url
                 return (
                     <NavLink
-                        className="header-menu-item"
+                        className="uppercase text-xl"
                         end
                         key={item.id}
                         onClick={close}
@@ -205,7 +247,7 @@ export function HeaderMenu({
                         {item.title}
                     </NavLink>
                 )
-            })}
+            })} */}
         </nav>
     )
 }
