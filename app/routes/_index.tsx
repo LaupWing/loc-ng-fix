@@ -441,27 +441,6 @@ function FeaturedProduct({ product }: { product: ProductDetailsFragment }) {
                                     size={18}
                                 />
                             ))}
-
-                            {/* <Star
-                                className="fill-current text-yellow-400"
-                                size={18}
-                            />
-                            <Star
-                                className="fill-current text-yellow-400"
-                                size={18}
-                            />
-                            <Star
-                                className="fill-current text-yellow-400"
-                                size={18}
-                            />
-                            <Star
-                                className="fill-current text-yellow-400"
-                                size={18}
-                            />
-                            <Star
-                                className="fill-current text-yellow-400"
-                                size={18}
-                            /> */}
                         </div>
                         <p className="text-sm">
                             <b>
