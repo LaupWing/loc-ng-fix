@@ -17,6 +17,7 @@ import {
     CarouselContent,
     CarouselItem,
 } from "~/components/ui/carousel"
+import reviews from "~/lib/reviews"
 
 export const meta: MetaFunction = () => {
     return [{ title: "Hydrogen | Home" }]
@@ -425,7 +426,23 @@ function FeaturedProduct({ product }: { product: ProductDetailsFragment }) {
                 <div className="w-full md:col-span-3 grid gap-4">
                     <div className="flex gap-2 items-center">
                         <div className="flex">
-                            <Star
+                            {[...Array(5)].map((_, index) => (
+                                <Star
+                                    key={index}
+                                    className={cn(
+                                        "fill-current text-yellow-400",
+                                        index <
+                                            reviews["body-crafting-system"][
+                                                "stars"
+                                            ]
+                                            ? "text-yellow-400"
+                                            : "text-neutral-300"
+                                    )}
+                                    size={18}
+                                />
+                            ))}
+
+                            {/* <Star
                                 className="fill-current text-yellow-400"
                                 size={18}
                             />
@@ -444,10 +461,14 @@ function FeaturedProduct({ product }: { product: ProductDetailsFragment }) {
                             <Star
                                 className="fill-current text-yellow-400"
                                 size={18}
-                            />
+                            /> */}
                         </div>
                         <p className="text-sm">
-                            <b>4.8</b> | 176 Reviews
+                            <b>
+                                {reviews["body-crafting-system"]["avg_rating"]}
+                            </b>{" "}
+                            | {reviews["body-crafting-system"]["reviews"]}{" "}
+                            Reviews
                         </p>
                     </div>
                     <h4 className="uppercase font-display font-bold text-3xl">
