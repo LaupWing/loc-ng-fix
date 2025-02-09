@@ -227,7 +227,7 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
             <div className="custom-container">
                 <div className=" w-full flex-shrink-0 rounded-2xl relative aspect-[8/12] md:aspect-[16/8] overflow-hidden flex">
                     <div className="h-[80%] pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-b from-transparent to-black z-10"></div>
-                    <Carousel setApi={setApi} className="w-full h-full">
+                    <Carousel setApi={setApi} className="w-full grid h-full">
                         <CarouselContent className="w-full h-full -ml-0">
                             {blogs.map((blog) => (
                                 <CarouselItem
@@ -401,25 +401,6 @@ function FeaturedProduct({ product }: { product: ProductDetailsFragment }) {
                                     ))}
                                 </CarouselContent>
                             </Carousel>
-                            // <Slider
-                            //     ref={sliderRef}
-                            //     {...settings}
-                            //     className="w-full h-full flex items-center justify-center"
-                            // >
-                            //     {product!.images.nodes.map((image) => (
-                            //         <div
-                            //             key={image.id}
-                            //             className="w-full h-full"
-                            //         >
-                            //             <Image
-                            //                 className="rounded-2xl flex-1"
-                            //                 data={image}
-                            //                 aspectRatio="1/1"
-                            //                 sizes="(min-width: 45em) 20vw, 50vw"
-                            //             />
-                            //         </div>
-                            //     ))}
-                            // </Slider>
                         )}
                     </div>
                 </div>
