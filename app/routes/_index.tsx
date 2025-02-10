@@ -38,8 +38,8 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({ context }: LoaderFunctionArgs) {
-    const [{ blog }, { collections }, { product }] = await Promise.all([
-        context.storefront.query(BLOGS_QUERY, {
+    const [{ articles }, { collections }, { product }] = await Promise.all([
+        context.storefront.query(ARTICLES_QUERY, {
             variables: {
                 startCursor: null,
             },
@@ -48,10 +48,9 @@ async function loadCriticalData({ context }: LoaderFunctionArgs) {
         context.storefront.query(SPECIFIC_PRODUCT_QUERY),
         // Add other queries here, so that they are loaded in parallel
     ])
-
     return {
         featuredCollection: collections.nodes[0],
-        blogs: blog!.articles.nodes,
+        articles: articles.nodes,
         specificProduct: product,
     }
 }
@@ -81,7 +80,7 @@ export default function Homepage() {
     useEffect(() => setIsClient(true), [])
     return (
         <div className="home">
-            {isClient && <FeaturedBlogs blogs={data.blogs} />}
+            {isClient && <FeaturedBlogs articles={data.articles} />}
             <HeroText />
             {/* <FeaturedCollection collection={data.featuredCollection} /> */}
             <FeaturedProduct
@@ -190,8 +189,8 @@ function RecommendedProducts({
     )
 }
 
-function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
-    if (!blogs) return null
+function FeaturedBlogs({ articles }: { articles: ArticleItemFragment[] }) {
+    if (!articles) return null
     const [isClient, setIsClient] = useState(false)
     useEffect(() => setIsClient(true), [])
 
@@ -199,7 +198,7 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
     const [currentSlide, setCurrentSlide] = useState(0)
 
     const publishedAt = new Date(
-        blogs[currentSlide].publishedAt
+        articles[currentSlide].publishedAt
     ).toLocaleDateString("en-GB")
 
     const next = () => {
@@ -230,14 +229,14 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
                     <div className="h-[80%] pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-b from-transparent to-black z-10"></div>
                     <Carousel setApi={setApi} className="w-full grid h-full">
                         <CarouselContent className="w-full h-full -ml-0">
-                            {blogs.map((blog) => (
+                            {articles.map((article) => (
                                 <CarouselItem
-                                    key={blog.id}
+                                    key={article.id}
                                     className="relative w-full h-full pl-0"
                                 >
                                     <Image
-                                        key={blog.id}
-                                        data={blog.image!}
+                                        key={article.id}
+                                        data={article.image!}
                                         className="object-cover rounded-2xl object-center w-full h-full"
                                         sizes="(min-width: 45em) 20vw, 50vw"
                                     />
@@ -252,7 +251,7 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
                                     {isClient && (
                                         <AnimatePresence mode="wait">
                                             <motion.span
-                                                key={blogs[currentSlide].id}
+                                                key={articles[currentSlide].id}
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -20 }}
@@ -269,7 +268,7 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
                                     {isClient && (
                                         <AnimatePresence mode="wait">
                                             <motion.h2
-                                                key={blogs[currentSlide].id}
+                                                key={articles[currentSlide].id}
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -20 }}
@@ -280,14 +279,14 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
                                                 }}
                                                 className="text-neutral-50 text-4xl md:text-6xl font-bold font-display"
                                             >
-                                                {blogs[currentSlide].title}
+                                                {articles[currentSlide].title}
                                             </motion.h2>
                                         </AnimatePresence>
                                     )}
                                     {isClient && (
                                         <AnimatePresence mode="wait">
                                             <motion.div
-                                                key={blogs[currentSlide].id}
+                                                key={articles[currentSlide].id}
                                                 initial={{ opacity: 0, y: 20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -20 }}
@@ -298,8 +297,9 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
                                                 }}
                                                 className="text-neutral-100 text-sm md:text-base line-clamp-2"
                                                 dangerouslySetInnerHTML={{
-                                                    __html: blogs[currentSlide]
-                                                        .contentHtml,
+                                                    __html: articles[
+                                                        currentSlide
+                                                    ].contentHtml,
                                                 }}
                                             ></motion.div>
                                         </AnimatePresence>
@@ -317,7 +317,7 @@ function FeaturedBlogs({ blogs }: { blogs: ArticleItemFragment[] }) {
                                     <MoveLeft />
                                 </button>
                                 <div className="flex gap-5 items-center">
-                                    {blogs.map((_, index) => (
+                                    {articles.map((_, index) => (
                                         <button
                                             key={index}
                                             className={cn(
@@ -524,50 +524,45 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     }
 ` as const
 
-const BLOGS_QUERY = `#graphql
-    query BlogIndex(
-        $language: LanguageCode
-        $startCursor: String
-    ) @inContext(language: $language) {
-        blog(handle: "all") {
-            title
-            seo {
-                title
-                description
+const ARTICLES_QUERY = `#graphql
+    query AllArticles(
+    $language: LanguageCode
+    $startCursor: String
+    $first: Int = 10
+) @inContext(language: $language) {
+    articles(
+        first: $first
+        after: $startCursor
+    ) {
+        nodes {
+            author: authorV2 {
+                name
             }
-            articles(
-                first: 3
-                after: $startCursor
-            ) {
-                nodes {
-                    author: authorV2 {
-                        name
-                    }
-                    contentHtml
-                    handle
-                    id
-                    image {
-                        id
-                        altText
-                        url(transform: { maxWidth: 2000, maxHeight: 2000, crop: CENTER })
-                        width
-                        height
-                    }
-                    publishedAt
-                    title
-                    blog {
-                        handle
-                    }
-                }
-                pageInfo {
-                    hasPreviousPage
-                    hasNextPage
-                    endCursor
-                    startCursor
-                }
+            contentHtml
+            handle
+            id
+            image {
+                id
+                altText
+                url(transform: { maxWidth: 2000, maxHeight: 2000, crop: CENTER })
+                width
+                height
+            }
+            publishedAt
+            title
+            blog {
+                handle
+                title
             }
         }
+        pageInfo {
+            hasPreviousPage
+            hasNextPage
+            endCursor
+            startCursor
+        }
     }
+}
 ` as const
 
 const SPECIFIC_PRODUCT_QUERY = `#graphql

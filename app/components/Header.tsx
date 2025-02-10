@@ -98,7 +98,13 @@ export function Header({
                             {(menu || FALLBACK_HEADER_MENU).items.map(
                                 (item) => {
                                     if (!item.url) return null
-
+                                    if (item.url.includes("blogs/all")) {
+                                        console.log(item.url)
+                                        item.url = item.url.replace(
+                                            "blogs/all",
+                                            "blogs"
+                                        )
+                                    }
                                     // if the url is internal, we strip the domain
                                     const url =
                                         item.url.includes("myshopify.com") ||
