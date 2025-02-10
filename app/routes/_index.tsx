@@ -80,7 +80,7 @@ export default function Homepage() {
     useEffect(() => setIsClient(true), [])
     return (
         <div className="home">
-            {isClient && <FeaturedBlogs articles={data.articles} />}
+            {isClient && <FeaturedArticles articles={data.articles} />}
             <HeroText />
             {/* <FeaturedCollection collection={data.featuredCollection} /> */}
             <FeaturedProduct
@@ -189,7 +189,7 @@ function RecommendedProducts({
     )
 }
 
-function FeaturedBlogs({ articles }: { articles: ArticleItemFragment[] }) {
+function FeaturedArticles({ articles }: { articles: ArticleItemFragment[] }) {
     if (!articles) return null
     const [isClient, setIsClient] = useState(false)
     useEffect(() => setIsClient(true), [])
