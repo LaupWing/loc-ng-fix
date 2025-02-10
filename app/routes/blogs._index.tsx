@@ -67,10 +67,10 @@ const ARTICLES_QUERY = `#graphql
         $startCursor: String
     ) @inContext(country: $country, language: $language) {
         articles(
-        first: $first,
-        last: $last,
-        before: $startCursor,
-        after: $endCursor
+            first: $first,
+            last: $last,
+            before: $startCursor,
+            after: $endCursor
         ) {
         pageInfo {
             hasNextPage
@@ -82,11 +82,11 @@ const ARTICLES_QUERY = `#graphql
             title
             handle
             blog {
-            title
+                title
             }
             seo {
-            title
-            description
+                title
+                description
             }
         }
         }
