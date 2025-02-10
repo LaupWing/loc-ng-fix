@@ -154,17 +154,18 @@ function RecommendedProducts({
                 <Suspense fallback={<div>Loading...</div>}>
                     <Await resolve={products}>
                         {(response) => (
-                            <div className="recommended-products-grid">
+                            <div className="grid md:grid-cols-4">
                                 {response
                                     ? response.products.nodes.map((product) => (
                                           <Link
                                               key={product.id}
-                                              className="recommended-product"
+                                              className=""
                                               to={`/products/${product.handle}`}
                                           >
                                               <Image
                                                   data={product.images.nodes[0]}
                                                   aspectRatio="1/1"
+                                                  className="rounded-xl"
                                                   sizes="(min-width: 45em) 20vw, 50vw"
                                               />
                                               <h4>{product.title}</h4>
