@@ -2,7 +2,6 @@ import { defer, type LoaderFunctionArgs } from "@netlify/remix-runtime"
 import { Link, useLoaderData, type MetaFunction } from "@remix-run/react"
 import { getPaginationVariables, Image } from "@shopify/hydrogen"
 import { ArticleItemFragment } from "storefrontapi.generated"
-import { PaginatedResourceSection } from "~/components/PaginatedResourceSection"
 
 export const meta: MetaFunction = () => {
     return [{ title: `Hydrogen | Articles` }]
@@ -37,25 +36,6 @@ function loadDeferredData({ context }: LoaderFunctionArgs) {
 export default function Articles() {
     const { articles } = useLoaderData<typeof loader>()
 
-    // return (
-    //     <div className="articles">
-    //         <h1>All Articles</h1>
-    //         <div className="articles-grid">
-    //             <PaginatedResourceSection connection={articles}>
-    //                 {({ node: article }) => (
-    //                     <Link
-    //                         className="article"
-    //                         key={article.handle}
-    //                         prefetch="intent"
-    //                         to={`/articles/${article.handle}`}
-    //                     >
-    //                         <h2>{article.title}</h2>
-    //                     </Link>
-    //                 )}
-    //             </PaginatedResourceSection>
-    //         </div>
-    //     </div>
-    // )
     return (
         <div className="bg-white md:pt-4 pb-16">
             <div className="custom-container flex items-start">
@@ -94,6 +74,11 @@ function ArticleItem({
         month: "long",
         day: "numeric",
     }).format(new Date(article.publishedAt!))
+    const blogCategories = {
+        coding: "bg-blue-500",
+        fitness: "bg-yellow-500",
+    }
+
     return (
         <div className="blog-article" key={article.id}>
             <Link
@@ -101,7 +86,7 @@ function ArticleItem({
                 to={`/blogs/${article.blog.handle}/${article.handle}`}
             >
                 {article.image && (
-                    <div className="rounded-xl overflow-hidden">
+                    <div className="rounded-xl relative overflow-hidden">
                         <Image
                             alt={article.image.altText || article.title}
                             aspectRatio="3/2"
@@ -110,6 +95,20 @@ function ArticleItem({
                             loading={loading}
                             sizes="(min-width: 768px) 50vw, 100vw"
                         />
+                        {article.blog.handle &&
+                            blogCategories[
+                                article.blog
+                                    .handle as keyof typeof blogCategories
+                            ] && (
+                                <div
+                                    className={`text-white absolute top-2 right-2 uppercase z-10 text-xs font-bold tracking-wide py-1 px-2 rounded-md ${
+                                        // @ts-ignore
+                                        blogCategories[article.blog.handle]
+                                    }`}
+                                >
+                                    {article.blog.handle}
+                                </div>
+                            )}
                     </div>
                 )}
                 <small>{publishedAt}</small>
