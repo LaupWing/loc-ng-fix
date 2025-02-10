@@ -160,6 +160,7 @@ const ARTICLES_QUERY = `#graphql
             handle
             blog {
                 title
+                handle
             }
             seo {
                 title
