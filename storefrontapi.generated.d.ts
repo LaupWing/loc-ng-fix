@@ -1501,7 +1501,7 @@ interface GeneratedQueryTypes {
         return: BlogQuery
         variables: BlogQueryVariables
     }
-    "#graphql\n  query Articles(\n    $country: CountryCode\n    $endCursor: String\n    $first: Int\n    $language: LanguageCode\n    $last: Int\n    $startCursor: String\n  ) @inContext(country: $country, language: $language) {\n    articles(\n      first: $first,\n      last: $last,\n      before: $startCursor,\n      after: $endCursor\n    ) {\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n      nodes {\n        title\n        handle\n        blog {\n          title\n        }\n        seo {\n          title\n          description\n        }\n      }\n    }\n  }\n": {
+    "#graphql\n    query Articles(\n        $country: CountryCode\n        $endCursor: String\n        $first: Int\n        $language: LanguageCode\n        $last: Int\n        $startCursor: String\n    ) @inContext(country: $country, language: $language) {\n        articles(\n            first: $first,\n            last: $last,\n            before: $startCursor,\n            after: $endCursor\n        ) {\n        pageInfo {\n            hasNextPage\n            hasPreviousPage\n            startCursor\n            endCursor\n        }\n        nodes {\n            title\n            handle\n            blog {\n                title\n            }\n            seo {\n                title\n                description\n            }\n        }\n        }\n    }\n": {
         return: ArticlesQuery
         variables: ArticlesQueryVariables
     }
