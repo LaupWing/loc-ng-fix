@@ -266,7 +266,8 @@ export default function Product() {
                         <Money data={selectedVariant.price} />
                     </div>
                     <div
-                        className="text-neutral-700 text-sm md:text-base"
+                        id="article-content"
+                        className="text-neutral-700 grid gap-2 text-sm md:text-base"
                         dangerouslySetInnerHTML={{
                             __html: product!.descriptionHtml,
                         }}
