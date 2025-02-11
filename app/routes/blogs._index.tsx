@@ -117,6 +117,9 @@ function ArticleItem({
                     className="line-clamp-4 text-sm"
                     dangerouslySetInnerHTML={{ __html: article.contentHtml! }}
                 ></div>
+                <small className="uppercase underline text-neutral-400">
+                    Read more
+                </small>
             </Link>
         </div>
     )
