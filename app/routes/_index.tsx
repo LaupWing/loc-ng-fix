@@ -277,7 +277,7 @@ function FeaturedArticles({ articles }: { articles: ArticleItemFragment[] }) {
                                                     delay: 0.1,
                                                     ease: "easeOut",
                                                 }}
-                                                className="text-neutral-50 text-4xl md:text-6xl font-bold font-display"
+                                                className="text-neutral-50 text-4xl md:text-5xl font-bold font-display"
                                             >
                                                 {articles[currentSlide].title}
                                             </motion.h2>
