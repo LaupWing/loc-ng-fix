@@ -305,9 +305,13 @@ function FeaturedArticles({ articles }: { articles: ArticleItemFragment[] }) {
                                         </AnimatePresence>
                                     )}
                                 </div>
-                                <button className="w-48 text-center mt-4 md:mt-0 bg-yellow-300 font-bold text-sm uppercase py-3 rounded-full">
-                                    Read More
-                                </button>
+                                <Link
+                                    to={`/blogs/${articles[currentSlide].blog.handle}/${articles[currentSlide].handle}`}
+                                >
+                                    <button className="w-48 text-center mt-4 md:mt-0 bg-yellow-300 font-bold text-sm uppercase py-3 rounded-full">
+                                        Read More
+                                    </button>
+                                </Link>
                             </div>
                             <div className="text-white flex justify-between items-center pt-4">
                                 <button
