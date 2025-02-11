@@ -67,19 +67,21 @@ export default function Article() {
             <small className="mt-4 text-neutral-500">
                 {publishedDate} &middot; {author?.name}
             </small>
-            <h1 className="mx-auto text-4xl md:text-5xl font-bold pt-2 pb-6">
+            <h1 className="mx-auto text-center text-4xl md:text-5xl font-bold pt-2 pb-6">
                 {title}
             </h1>
 
-            {image && (
-                <Image
-                    className="custom-container mt-4 object-cover rounded-2xl"
-                    data={image}
-                    aspectRatio="16/9"
-                    sizes="90vw"
-                    loading="eager"
-                />
-            )}
+            <div className="rounded-2xl overflow-hidden">
+                {image && (
+                    <Image
+                        className="custom-container overflow-hidden mt-4 object-cover"
+                        data={image}
+                        aspectRatio="16/9"
+                        sizes="90vw"
+                        loading="eager"
+                    />
+                )}
+            </div>
             <div
                 id="article-content"
                 dangerouslySetInnerHTML={{ __html: contentHtml }}
