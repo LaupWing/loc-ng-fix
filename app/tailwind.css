@@ -127,4 +127,8 @@
     h2 {
         @apply text-3xl font-bold;
     }
+
+    blockquote {
+        @apply border-l-4 border-accent-foreground bg-accent italic p-4 my-4;
+    }
 }

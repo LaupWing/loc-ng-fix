@@ -444,51 +444,38 @@ export type RecommendedProductsQuery = {
     }
 }
 
-export type BlogIndexQueryVariables = StorefrontAPI.Exact<{
+export type AllArticlesQueryVariables = StorefrontAPI.Exact<{
     language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>
     startCursor?: StorefrontAPI.InputMaybe<
         StorefrontAPI.Scalars["String"]["input"]
     >
+    first?: StorefrontAPI.InputMaybe<StorefrontAPI.Scalars["Int"]["input"]>
 }>
 
-export type BlogIndexQuery = {
-    blog?: StorefrontAPI.Maybe<
-        Pick<StorefrontAPI.Blog, "title"> & {
-            seo?: StorefrontAPI.Maybe<
-                Pick<StorefrontAPI.Seo, "title" | "description">
-            >
-            articles: {
-                nodes: Array<
+export type AllArticlesQuery = {
+    articles: {
+        nodes: Array<
+            Pick<
+                StorefrontAPI.Article,
+                "contentHtml" | "handle" | "id" | "publishedAt" | "title"
+            > & {
+                author?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.ArticleAuthor, "name">
+                >
+                image?: StorefrontAPI.Maybe<
                     Pick<
-                        StorefrontAPI.Article,
-                        | "contentHtml"
-                        | "handle"
-                        | "id"
-                        | "publishedAt"
-                        | "title"
-                    > & {
-                        author?: StorefrontAPI.Maybe<
-                            Pick<StorefrontAPI.ArticleAuthor, "name">
-                        >
-                        image?: StorefrontAPI.Maybe<
-                            Pick<
-                                StorefrontAPI.Image,
-                                "id" | "altText" | "url" | "width" | "height"
-                            >
-                        >
-                        blog: Pick<StorefrontAPI.Blog, "handle">
-                    }
+                        StorefrontAPI.Image,
+                        "id" | "altText" | "url" | "width" | "height"
+                    >
                 >
-                pageInfo: Pick<
-                    StorefrontAPI.PageInfo,
-                    | "hasPreviousPage"
-                    | "hasNextPage"
-                    | "endCursor"
-                    | "startCursor"
-                >
+                blog: Pick<StorefrontAPI.Blog, "handle" | "title">
             }
-        }
-    >
+        >
+        pageInfo: Pick<
+            StorefrontAPI.PageInfo,
+            "hasPreviousPage" | "hasNextPage" | "endCursor" | "startCursor"
+        >
+    }
 }
 
 export type ProductDetailsFragment = Pick<
@@ -672,8 +659,17 @@ export type ArticlesQuery = {
             "hasNextPage" | "hasPreviousPage" | "startCursor" | "endCursor"
         >
         nodes: Array<
-            Pick<StorefrontAPI.Article, "title" | "handle"> & {
-                blog: Pick<StorefrontAPI.Blog, "title">
+            Pick<
+                StorefrontAPI.Article,
+                "contentHtml" | "handle" | "id" | "publishedAt" | "title"
+            > & {
+                image?: StorefrontAPI.Maybe<
+                    Pick<
+                        StorefrontAPI.Image,
+                        "id" | "altText" | "url" | "width" | "height"
+                    >
+                >
+                blog: Pick<StorefrontAPI.Blog, "title" | "handle">
                 seo?: StorefrontAPI.Maybe<
                     Pick<StorefrontAPI.Seo, "title" | "description">
                 >
@@ -1485,9 +1481,9 @@ interface GeneratedQueryTypes {
         return: RecommendedProductsQuery
         variables: RecommendedProductsQueryVariables
     }
-    '#graphql\n    query BlogIndex(\n        $language: LanguageCode\n        $startCursor: String\n    ) @inContext(language: $language) {\n        blog(handle: "all") {\n            title\n            seo {\n                title\n                description\n            }\n            articles(\n                first: 3\n                after: $startCursor\n            ) {\n                nodes {\n                    author: authorV2 {\n                        name\n                    }\n                    contentHtml\n                    handle\n                    id\n                    image {\n                        id\n                        altText\n                        url(transform: { maxWidth: 2000, maxHeight: 2000, crop: CENTER })\n                        width\n                        height\n                    }\n                    publishedAt\n                    title\n                    blog {\n                        handle\n                    }\n                }\n                pageInfo {\n                    hasPreviousPage\n                    hasNextPage\n                    endCursor\n                    startCursor\n                }\n            }\n        }\n    }\n': {
-        return: BlogIndexQuery
-        variables: BlogIndexQueryVariables
+    "#graphql\n    query AllArticles(\n    $language: LanguageCode\n    $startCursor: String\n    $first: Int = 10\n) @inContext(language: $language) {\n    articles(\n        first: $first\n        after: $startCursor\n    ) {\n        nodes {\n            author: authorV2 {\n                name\n            }\n            contentHtml\n            handle\n            id\n            image {\n                id\n                altText\n                url(transform: { maxWidth: 2000, maxHeight: 2000, crop: CENTER })\n                width\n                height\n            }\n            publishedAt\n            title\n            blog {\n                handle\n                title\n            }\n        }\n        pageInfo {\n            hasPreviousPage\n            hasNextPage\n            endCursor\n            startCursor\n        }\n    }\n}\n": {
+        return: AllArticlesQuery
+        variables: AllArticlesQueryVariables
     }
     '#graphql\n    fragment ProductDetails on Product {\n        id\n        title\n        handle\n        descriptionHtml\n        priceRange {\n            minVariantPrice {\n                amount\n                currencyCode\n            }\n        }\n        images(first: 3) {\n            nodes {\n                url(transform: { maxWidth: 2000, maxHeight: 2000, crop: CENTER })\n                id\n                altText\n                width\n                height\n            }\n        }\n        variants(first: 1) {  # 👈 Fetch the only variant of this product\n            nodes {\n                id\n                availableForSale\n                price {\n                    amount\n                    currencyCode\n                }\n            }\n        }\n    }\n\n    query SpecificProduct($country: CountryCode, $language: LanguageCode)\n        @inContext(country: $country, language: $language) {\n        product(handle: "body-crafting-system") {\n            ...ProductDetails\n        }\n    }\n': {
         return: SpecificProductQuery
@@ -1501,7 +1497,7 @@ interface GeneratedQueryTypes {
         return: BlogQuery
         variables: BlogQueryVariables
     }
-    "#graphql\n    query Articles(\n        $country: CountryCode\n        $endCursor: String\n        $first: Int\n        $language: LanguageCode\n        $last: Int\n        $startCursor: String\n    ) @inContext(country: $country, language: $language) {\n        articles(\n            first: $first,\n            last: $last,\n            before: $startCursor,\n            after: $endCursor\n        ) {\n        pageInfo {\n            hasNextPage\n            hasPreviousPage\n            startCursor\n            endCursor\n        }\n        nodes {\n            title\n            handle\n            blog {\n                title\n            }\n            seo {\n                title\n                description\n            }\n        }\n        }\n    }\n": {
+    "#graphql\n    query Articles(\n        $country: CountryCode\n        $endCursor: String\n        $first: Int\n        $language: LanguageCode\n        $last: Int\n        $startCursor: String\n    ) @inContext(country: $country, language: $language) {\n        articles(\n            first: $first,\n            last: $last,\n            before: $startCursor,\n            after: $endCursor\n        ) {\n        pageInfo {\n            hasNextPage\n            hasPreviousPage\n            startCursor\n            endCursor\n        }\n        nodes {\n            contentHtml\n            handle\n            id\n            image {\n                id\n                altText\n                url\n                width\n                height\n            }\n            publishedAt\n            title\n            handle\n            blog {\n                title\n                handle\n            }\n            seo {\n                title\n                description\n            }\n        }\n        }\n    }\n": {
         return: ArticlesQuery
         variables: ArticlesQueryVariables
     }
