@@ -445,7 +445,8 @@ function FeaturedProduct({ product }: { product: ProductDetailsFragment }) {
                         <Money data={product!.priceRange.minVariantPrice} />
                     </div>
                     <div
-                        className="text-neutral-700 md:text-base text-sm"
+                        id="article-content"
+                        className="text-neutral-700 grid gap-2 md:text-base text-sm"
                         dangerouslySetInnerHTML={{
                             __html: product!.descriptionHtml,
                         }}
