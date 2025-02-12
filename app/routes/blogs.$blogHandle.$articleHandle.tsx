@@ -67,7 +67,7 @@ export default function Article() {
             <small className="mt-4 text-neutral-500">
                 {publishedDate} &middot; {author?.name}
             </small>
-            <h1 className="mx-auto text-center text-4xl md:text-5xl font-bold pt-2 pb-6">
+            <h1 className="mx-auto text-center text-4xl md:text-5xl font-bold pt-2 px-2 pb-6">
                 {title}
             </h1>
 
