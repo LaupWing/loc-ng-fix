@@ -124,6 +124,10 @@
         @apply text-2xl font-bold;
     }
 
+    h4 {
+        @apply text-xl font-bold;
+    }
+
     h2 {
         @apply text-3xl font-bold;
     }
