@@ -30,7 +30,7 @@ import {
 import reviews from "~/lib/reviews"
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-    return [{ title: `Hydrogen | ${data?.product.title ?? ""}` }]
+    return [{ title: `Loc-Ng | ${data?.product.title ?? ""}` }]
 }
 
 export async function loader(args: LoaderFunctionArgs) {

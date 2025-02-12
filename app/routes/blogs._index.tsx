@@ -4,7 +4,7 @@ import { getPaginationVariables, Image } from "@shopify/hydrogen"
 import { ArticleItemFragment } from "storefrontapi.generated"
 
 export const meta: MetaFunction = () => {
-    return [{ title: `Hydrogen | Articles` }]
+    return [{ title: `Loc-Ng | Articles` }]
 }
 
 export async function loader(args: LoaderFunctionArgs) {

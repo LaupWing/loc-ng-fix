@@ -20,7 +20,7 @@ import {
 import reviews from "~/lib/reviews"
 
 export const meta: MetaFunction = () => {
-    return [{ title: "Hydrogen | Home" }]
+    return [{ title: "Loc-Ng | Home" }]
 }
 
 export async function loader(args: LoaderFunctionArgs) {
