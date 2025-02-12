@@ -136,6 +136,10 @@
         @apply list-disc ml-4;
     }
 
+    a {
+        @apply underline;
+    }
+
     blockquote {
         @apply border-l-4 border-accent-foreground bg-accent italic p-4 my-4;
     }
