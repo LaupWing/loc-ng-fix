@@ -79,6 +79,7 @@ export default function Article() {
                         aspectRatio="16/9"
                         sizes="90vw"
                         loading="eager"
+                        alt={image.altText!}
                     />
                 )}
             </div>
@@ -93,32 +94,32 @@ export default function Article() {
 
 // NOTE: https://shopify.dev/docs/api/storefront/latest/objects/blog#field-blog-articlebyhandle
 const ARTICLE_QUERY = `#graphql
-    query Article(
-      $articleHandle: String!
-      $blogHandle: String!
-      $country: CountryCode
-      $language: LanguageCode
-    ) @inContext(language: $language, country: $country) {
-      blog(handle: $blogHandle) {
-        articleByHandle(handle: $articleHandle) {
-          title
-          contentHtml
-          publishedAt
-          author: authorV2 {
-            name
-          }
-          image {
-            id
-            altText
-            url
-            width
-            height
-          }
-          seo {
-            description
-            title
-          }
+        query Article(
+            $articleHandle: String!
+            $blogHandle: String!
+            $country: CountryCode
+            $language: LanguageCode
+        ) @inContext(language: $language, country: $country) {
+            blog(handle: $blogHandle) {
+                articleByHandle(handle: $articleHandle) {
+                    title
+                    contentHtml
+                    publishedAt
+                    author: authorV2 {
+                        name
+                    }
+                    image {
+                        id
+                        altText
+                        url
+                        width
+                        height
+                    }
+                    seo {
+                        description
+                        title
+                    }
+                }
+            }
         }
-      }
-    }
 ` as const
