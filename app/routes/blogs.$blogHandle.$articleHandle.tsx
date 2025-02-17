@@ -3,9 +3,56 @@ import { useLoaderData, type MetaFunction } from "@remix-run/react"
 import { Image } from "@shopify/hydrogen"
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-    console.log(data)
+    const titleElements = data?.article.title
+        ? [
+              { title: data?.article.title },
+              {
+                  name: "twitter:title",
+                  content: data?.article.title,
+              },
+              {
+                  property: "og:title",
+                  content: data?.article.title,
+              },
+          ]
+        : []
+    const descriptionElements = data?.article.excerpt
+        ? [
+              {
+                  name: "description",
+                  content: data?.article.excerpt,
+              },
+              {
+                  name: "twitter:description",
+                  content: data?.article.excerpt,
+              },
+              {
+                  property: "og:description",
+                  content: data?.article.excerpt,
+              },
+          ]
+        : []
+    const imageElements = [
+        {
+            name: "twitter:image",
+            content: data?.article.image?.url ?? "",
+        },
+        {
+            property: "og:image",
+            content: data?.article.image?.url ?? "",
+        },
+        {
+            name: "twitter:card",
+            content: "summary_large_image",
+        },
+    ]
 
-    return [{ title: `Loc-Ng | ${data?.article.title ?? ""} article` }]
+    return [
+        ...titleElements,
+        ...descriptionElements,
+        ...imageElements,
+        { title: `Loc-Ng | ${data?.article.title ?? ""} article` },
+    ]
 }
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -107,6 +154,7 @@ const ARTICLE_QUERY = `#graphql
                     title
                     contentHtml
                     publishedAt
+                    excerpt
                     author: authorV2 {
                         name
                     }
