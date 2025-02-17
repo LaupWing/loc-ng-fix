@@ -1489,7 +1489,7 @@ interface GeneratedQueryTypes {
         return: SpecificProductQuery
         variables: SpecificProductQueryVariables
     }
-    "#graphql\n    query Article(\n      $articleHandle: String!\n      $blogHandle: String!\n      $country: CountryCode\n      $language: LanguageCode\n    ) @inContext(language: $language, country: $country) {\n      blog(handle: $blogHandle) {\n        articleByHandle(handle: $articleHandle) {\n          title\n          contentHtml\n          publishedAt\n          author: authorV2 {\n            name\n          }\n          image {\n            id\n            altText\n            url\n            width\n            height\n          }\n          seo {\n            description\n            title\n          }\n        }\n      }\n    }\n": {
+    "#graphql\n        query Article(\n            $articleHandle: String!\n            $blogHandle: String!\n            $country: CountryCode\n            $language: LanguageCode\n        ) @inContext(language: $language, country: $country) {\n            blog(handle: $blogHandle) {\n                articleByHandle(handle: $articleHandle) {\n                    title\n                    contentHtml\n                    publishedAt\n                    author: authorV2 {\n                        name\n                    }\n                    image {\n                        id\n                        altText\n                        url\n                        width\n                        height\n                    }\n                    seo {\n                        description\n                        title\n                    }\n                }\n            }\n        }\n": {
         return: ArticleQuery
         variables: ArticleQueryVariables
     }

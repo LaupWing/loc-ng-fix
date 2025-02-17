@@ -3,6 +3,8 @@ import { useLoaderData, type MetaFunction } from "@remix-run/react"
 import { Image } from "@shopify/hydrogen"
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
+    console.log(data)
+
     return [{ title: `Loc-Ng | ${data?.article.title ?? ""} article` }]
 }
 
