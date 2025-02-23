@@ -538,6 +538,8 @@ const ARTICLES_QUERY = `#graphql
     articles(
         first: $first
         after: $startCursor
+        sortKey: PUBLISHED_AT
+        reverse: true
     ) {
         nodes {
             author: authorV2 {
