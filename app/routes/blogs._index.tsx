@@ -76,8 +76,10 @@ function ArticleItem({
     }).format(new Date(article.publishedAt!))
     const blogCategories = {
         coding: "bg-blue-500",
+        "social-skills": "bg-emerald-500",
         fitness: "bg-yellow-500",
     }
+    console.log(article)
 
     return (
         <div className="blog-article" key={article.id}>
