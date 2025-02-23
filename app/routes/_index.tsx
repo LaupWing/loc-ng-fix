@@ -91,28 +91,6 @@ export default function Homepage() {
     )
 }
 
-// function FeaturedCollection({
-//     collection,
-// }: {
-//     collection: FeaturedCollectionFragment
-// }) {
-//     if (!collection) return null
-//     const image = collection?.image
-//     return (
-//         <Link
-//             className="featured-collection"
-//             to={`/collections/${collection.handle}`}
-//         >
-//             {image && (
-//                 <div className="featured-collection-image">
-//                     <Image data={image} sizes="100vw" />
-//                 </div>
-//             )}
-//             <h1>{collection.title}</h1>
-//         </Link>
-//     )
-// }
-
 function HeroText() {
     return (
         <div className="flex items-start bg-white">
@@ -277,7 +255,7 @@ function FeaturedArticles({ articles }: { articles: ArticleItemFragment[] }) {
                                                     delay: 0.1,
                                                     ease: "easeOut",
                                                 }}
-                                                className="text-neutral-50 text-4xl md:text-5xl font-bold font-display"
+                                                className="text-neutral-50 text-4xl md:text-5xl font-bold font-display bg-black/20 rounded p-1 backdrop-blur"
                                             >
                                                 {articles[currentSlide].title}
                                             </motion.h2>
