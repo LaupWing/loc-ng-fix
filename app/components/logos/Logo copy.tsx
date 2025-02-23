@@ -10,6 +10,7 @@ const Logo: FC<{
             className={cn("fill-current", className)}
             zoomAndPan="magnify"
             viewBox="0 0 375 149.999998"
+            height="200"
             preserveAspectRatio="xMidYMid meet"
             version="1.0"
         >
