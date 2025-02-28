@@ -511,7 +511,7 @@ const ARTICLES_QUERY = `#graphql
     query AllArticles(
     $language: LanguageCode
     $startCursor: String
-    $first: Int = 10
+    $first: Int = 3
 ) @inContext(language: $language) {
     articles(
         first: $first

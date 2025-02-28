@@ -140,6 +140,8 @@ const ARTICLES_QUERY = `#graphql
             last: $last,
             before: $startCursor,
             after: $endCursor
+            sortKey: PUBLISHED_AT
+            reverse: true
         ) {
         pageInfo {
             hasNextPage
